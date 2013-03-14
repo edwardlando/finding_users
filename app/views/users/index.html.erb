@@ -1,0 +1,25 @@
+<h1>Listing users</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Contact</th>
+    <th>Influence</th>
+    <th>Description</th>
+    <th>Image</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @users.each do |user| %>
+  <tr>
+    <td><%= user.name %></td>
+    <td><%= user.contact %></td>
+    <td><%= user.influence %></td>
+    <td><%= user.description %></td>
+    <td><%= user.image %></td>
+  </tr>
+<% end %>
+</table>
+
