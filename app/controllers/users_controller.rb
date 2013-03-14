@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   def index
     
   #  configure
-    arr = ["thefancy","#fashion","ecommerce"]
+    arr = ["thefancy","wanelo"]
     @users = search_terms(arr).sort {|a,b| b.influence<=>a.influence}
 
     respond_to do |format|
