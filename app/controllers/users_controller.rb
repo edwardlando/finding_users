@@ -1,13 +1,17 @@
 
-
 class UsersController < ApplicationController
   # GET /users
   # GET /users.json
+
+
+
   def index
     
   #  configure
     arr = ["thefancy","wanelo"]
     @users = search_terms(arr).sort {|a,b| b.influence<=>a.influence}
+
+    @profile = linkedin_search
 
     respond_to do |format|
       format.html # index.html.erb
@@ -134,10 +138,35 @@ def twitter_search(terms)
   user_list.values
 end
 
+def linkedin_search
+  @api_key = '9u62uu7fluz1'
+  @secret_key = 'QnhL3SzveFxUt4R9'
+  @oauth_user_token = '57caf870-d04a-46ff-a1f4-2d39d0d2e04e'
+  @oauth_user_secret = '89fb2b42-13f5-4f4f-bbf8-eb2e5dab8d09'
+
+  client = LinkedIn::Client.new(@api_key, @secret_key)
+
+  rtoken = client.request_token.token
+  rsecret = client.request_token.secret
+  
+  client.request_token.authorize_url
+  p "**********************************"
+  p client.request_token.authorize_url
+
+  pin = '84526'
+
+  client.authorize_from_request(rtoken, rsecret, pin)
+
+  p client
+
+  client.profile
+end
+
 
 def search_terms(terms)
   twitter_search(terms)
 end
+
 
 def configure
   twitter_config

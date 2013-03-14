@@ -7,7 +7,13 @@ gem 'rails', '3.2.12'
 
 # gem 'sqlite3'
 
-gem 'pg'
+group :development do 
+	gem 'sqlite3'
+end
+
+group :production do
+	gem 'pg'
+end
 
 
 # Gems used only for assets and not required
@@ -25,6 +31,7 @@ end
 gem 'twitter'
 gem 'faraday'
 gem 'jquery-rails'
+gem 'linkedin'
 
 
 # To use ActiveModel has_secure_password

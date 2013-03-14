@@ -1,3 +1,5 @@
+Profile <%= @profile %>
+
 <h1>Listing users</h1>
 
 <table>
@@ -12,14 +14,16 @@
     <th></th>
   </tr>
 
-<% @users.each do |user| %>
-  <tr>
-    <td><%= user.name %></td>
-    <td><%= user.contact %></td>
-    <td><%= user.influence %></td>
-    <td><%= user.description %></td>
-    <td><img height=80px width=80px src='<%= user.image %>' </td>
-  </tr>
+<% unless @users.nil? %>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= user.contact %></td>
+      <td><%= user.influence %></td>
+      <td><%= user.description %></td>
+      <td><img height=80px width=80px src='<%= user.image %>' </td>
+    </tr>
+  <% end %>
 <% end %>
 </table>
 
