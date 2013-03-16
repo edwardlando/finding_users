@@ -119,6 +119,9 @@ GEM
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
+    tumblr-api (0.1.4)
+      activesupport
+      httparty
     twitter (4.6.1)
       faraday (~> 0.8, < 0.10)
       multi_json (~> 1.0)
@@ -138,9 +141,11 @@ DEPENDENCIES
   klout
   koala
   linkedin
+  oauth
   pg
   rails (= 3.2.12)
   sass-rails (~> 3.2.3)
   sqlite3
+  tumblr-api
   twitter
   uglifier (>= 1.0.3)

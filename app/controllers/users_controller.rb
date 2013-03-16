@@ -157,13 +157,13 @@ end
     ids = []
     terms.each do |t|
       res = @graph.search(t)
-      puts res
+      #puts res
       temp_ids = res.map {|r| r['from']['id']}
       ids.push(temp_ids)
     end
     ids.flatten!
     users = @graph.get_objects(ids)
-    puts users
+    #puts users
     users = users.values
     users.each do |user|
       u = User.new
@@ -223,28 +223,26 @@ def tumblr_search
   oauth_consumer_key = 'sXgmq0oQlMAGWKH5tTIk8ls0HEr0OyNW6gf8YssYidumIZt6n7'
   secret_key = 'ajXT4SYKQy6bjQO3kKwrBNQdGrwzvS8fwEHsg5L7L5NNpf65xj'
 
-  request_tokenURL = 'http://www.tumblr.com/oauth/request_token'
+  user = OAuth::Consumer.new(oauth_consumer_key, secret_key, :site => "http://www.tumblr.com/")
 
-  consumer = OAuth::Consumer.new(
-    oauth_consumer_key, secret_key, :site => 'https://www.tumblr.com/oauth/access_token')
-    access_token = consumer.get_access_token(nil, {}, { :x_auth_mode => 'client_auth', 
-                                                    :x_auth_username => "some@email.com", 
-                                                    :x_auth_password => "password"})
-    tumblr_credentials = access_token.get('http://www.tumblr.com/api/authenticate')
- 
-  p "**********************************"
-  puts access_token
-  puts access_token.token
-  puts access_token.secret        
-  puts tumblr_credentials.body
-  p "**********************************"
+  token_hash = {:oauth_token => user.access_token_path,:oauth_token_secret => access_token_path}
 
+  #access_token = OAuth::AccessToken.from_hash(consumer, token_hash )
+
+  p "77777777777777777777777"
+  p user
+
+
+=begin
   Tumblr.configure do |config|
     config.consumer_key = oauth_consumer_key
     config.consumer_secret = secret_key
     config.oauth_token = access_token.token
     config.oauth_token_secret = access_token.secret
   end
+=end
+
+
 end
 
 

@@ -35,6 +35,8 @@ gem 'linkedin'
 gem 'klout'
 gem 'faraday'
 gem 'koala'
+gem 'tumblr-api'
+gem 'oauth'
 
 
 # To use ActiveModel has_secure_password
