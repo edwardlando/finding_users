@@ -135,11 +135,8 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   faraday
   jquery-rails
-<<<<<<< HEAD
   klout
-=======
   koala
->>>>>>> 08ad8d673f4af3fbaec83864d6efbef38da29bc9
   linkedin
   pg
   rails (= 3.2.12)

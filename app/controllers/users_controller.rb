@@ -9,8 +9,9 @@ class UsersController < ApplicationController
     arr = ["wanelo","thefancy"]
     @users = search_terms(arr).sort {|a,b| b.influence<=>a.influence}
 
+    @facebook = fb_search("wanelo")
 
-    #@klout = klout_search
+    @klout = klout_search
 
     #@profile = linkedin_search
 
@@ -122,7 +123,7 @@ def twitter_search(terms)
 
     users = callback.results.map {|res| res.user} 
     users.each.with_index do |user,ind|
-      puts user.name
+      #puts user.name
       if (user_list.has_key?(user.name))
         user_list[user.name].influence+=user.followers_count
       else
@@ -143,11 +144,13 @@ end
 
   def fb_search(terms)
     @graph = Koala::Facebook::API.new
-    terms.each do |t|
-      puts @graph.search(t)
-    end
+    #terms.each do |t|
+      #puts @graph.search(t)
+    #end
+
+    @graph.get_object(terms)
   end
-  
+
 def linkedin_search
   @api_key = '9u62uu7fluz1'
   @secret_key = 'QnhL3SzveFxUt4R9'
@@ -174,26 +177,22 @@ end
 
 def klout_search
   require 'klout'
-  @api_key = 'xm2cvu3cnakgsdy827skq7he'
+  Klout.api_key = ENV['qyj6z8v63bx29wp4nmf4ej56']
 
-  Klout.api_key = ENV[@api_key]
-  klout_id = Klout::Identity.find_by_screen_name('jasontorres')
-
-
-  #user = Klout::User.new(klout_id)
-
-  #topics = user.topics
-
-  p "**********************************"
-  p klout_id
-
+  klout_id = Klout::Identity.find_by_screen_name('edwardlando')
+  user = Klout::Identity.new(klout_id)
+  user.details
+  user.score
+  user.score.scoreDelta.dayChange
+  user.topics
+  user.influence
 end
 
 
 
 
 def search_terms(terms)
-    fb_search(terms)
+    #fb_search(terms)
   twitter_search(terms)
 
 end
