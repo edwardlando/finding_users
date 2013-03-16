@@ -9,13 +9,21 @@ class UsersController < ApplicationController
     arr = ["wanelo","thefancy"]
     @users = search_terms(arr).sort {|a,b| b.influence<=>a.influence}
 
-    @facebook = fb_search("wanelo")
+  #  @facebook = fb_search(arr)
+
 
     #@klout = klout_search
 
     #@linked_in = linkedin_search
 
     tumblr_search
+
+    @users = search_terms(arr)
+
+  #  @klout = klout_search
+
+   # @linked_in = linkedin_search
+
 
     respond_to do |format|
       format.html # index.html.erb
@@ -110,10 +118,10 @@ def twitter_search(terms)
   text = []
   user_list = {}
   @consumer_key = '0o6WVeAsAE7KpFKAEcWT8Q'
-@consumer_secret = 'BdFwoO7wzDmIeHDTW6cWnSWPBDEfpOchhihygbo3wds'
-@access_token = '307469831-baPCizmKBOYTyXKyqtaEWhAZM1EkElSSCqKHmfOY'
-@access_secret = 'KDzS1sMjZ1zTjrCO85SOAwEV4LEqJEK7UQ6hw4Gbc'
-@conn = ''
+  @consumer_secret = 'BdFwoO7wzDmIeHDTW6cWnSWPBDEfpOchhihygbo3wds'
+  @access_token = '307469831-baPCizmKBOYTyXKyqtaEWhAZM1EkElSSCqKHmfOY'
+  @access_secret = 'KDzS1sMjZ1zTjrCO85SOAwEV4LEqJEK7UQ6hw4Gbc'
+  @conn = ''
   Twitter.configure do |config|
     config.consumer_key = @consumer_key
     config.consumer_secret = @consumer_secret
@@ -122,7 +130,6 @@ def twitter_search(terms)
   end
   terms.each do |t|
     callback = Twitter.search(t,:count => 100, :lang => "en")
-
     users = callback.results.map {|res| res.user} 
     users.each.with_index do |user,ind|
       #puts user.name
@@ -134,7 +141,7 @@ def twitter_search(terms)
         u.description = user.description
         u.image = user.profile_background_image_url
         u.influence = user.followers_count
-        u.contact = callback.results[ind].from_user
+        u.contact = 'twitter.com/'+callback.results[ind].from_user
         user_list[u.name]= u
       end
     end
@@ -146,11 +153,33 @@ end
 
   def fb_search(terms)
     @graph = Koala::Facebook::API.new
-    #terms.each do |t|
-      #puts @graph.search(t)
-    #end
-
-    @graph.get_object(terms)
+    user_list = {}
+    ids = []
+    terms.each do |t|
+      res = @graph.search(t)
+      puts res
+      temp_ids = res.map {|r| r['from']['id']}
+      ids.push(temp_ids)
+    end
+    ids.flatten!
+    users = @graph.get_objects(ids)
+    puts users
+    users = users.values
+    users.each do |user|
+      u = User.new
+      u.influence = 0
+      u.name = user['name']
+      if !user['description'].nil?
+        u.description = user['description']
+        u.influence += 5000
+        u.image = user['cover']['source']
+      end
+      u.contact = user['link']
+      u.influence += 5000
+      user_list[u.name]=u
+    end
+    user_list.values
+ #   render :json => users
   end
 
 def linkedin_search
@@ -222,9 +251,8 @@ end
 
 
 def search_terms(terms)
-    #fb_search(terms)
-  twitter_search(terms)
-
+  users = fb_search(terms)+twitter_search(terms)
+  users.sort {|b,a| a.influence <=> b.influence }
 end
 
 
