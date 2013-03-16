@@ -32,6 +32,7 @@ gem 'twitter'
 gem 'faraday'
 gem 'jquery-rails'
 gem 'linkedin'
+gem 'koala'
 
 
 # To use ActiveModel has_secure_password

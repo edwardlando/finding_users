@@ -8,10 +8,10 @@ class UsersController < ApplicationController
   def index
     
   #  configure
-    arr = ["thefancy","wanelo"]
+    arr = ["wanelo","thefancy"]
     @users = search_terms(arr).sort {|a,b| b.influence<=>a.influence}
 
-    @profile = linkedin_search
+    #@profile = linkedin_search
 
     respond_to do |format|
       format.html # index.html.erb
@@ -118,8 +118,9 @@ def twitter_search(terms)
   end
   terms.each do |t|
     callback = Twitter.search(t,:count => 100, :lang => "en")
+
     users = callback.results.map {|res| res.user} 
-    users.each do |user|
+    users.each.with_index do |user,ind|
       puts user.name
       if (user_list.has_key?(user.name))
         user_list[user.name].influence+=user.followers_count
@@ -129,8 +130,8 @@ def twitter_search(terms)
         u.description = user.description
         u.image = user.profile_background_image_url
         u.influence = user.followers_count
-        u.contact = user.url
-        user_list[u.name]=u
+        u.contact = callback.results[ind].from_user
+        user_list[u.name]= u
       end
     end
   end
@@ -138,7 +139,14 @@ def twitter_search(terms)
   user_list.values
 end
 
-def linkedin_search
+
+  def fb_search(terms)
+    @graph = Koala::Facebook::API.new
+    terms.each do |t|
+      puts @graph.search(t)
+    end
+  end
+=begin def linkedin_search
   @api_key = '9u62uu7fluz1'
   @secret_key = 'QnhL3SzveFxUt4R9'
   @oauth_user_token = '57caf870-d04a-46ff-a1f4-2d39d0d2e04e'
@@ -161,10 +169,12 @@ def linkedin_search
 
   client.profile
 end
-
+=end
 
 def search_terms(terms)
+    fb_search(terms)
   twitter_search(terms)
+
 end
 
 
