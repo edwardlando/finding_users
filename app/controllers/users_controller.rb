@@ -11,9 +11,11 @@ class UsersController < ApplicationController
 
     @facebook = fb_search("wanelo")
 
-    @klout = klout_search
+    #@klout = klout_search
 
-    @linked_in = linkedin_search
+    #@linked_in = linkedin_search
+
+    tumblr_search
 
     respond_to do |format|
       format.html # index.html.erb
@@ -162,8 +164,8 @@ def linkedin_search
   rtoken = client.request_token.token
   rsecret = client.request_token.secret
 
-  p "**********************************"
-  p client.request_token.authorize_url
+  #p "**********************************"
+  #p client.request_token.authorize_url
 
   pin = '18360'
 
@@ -186,6 +188,34 @@ def klout_search
   user.score.scoreDelta.dayChange
   user.topics
   user.influence
+end
+
+def tumblr_search
+  oauth_consumer_key = 'sXgmq0oQlMAGWKH5tTIk8ls0HEr0OyNW6gf8YssYidumIZt6n7'
+  secret_key = 'ajXT4SYKQy6bjQO3kKwrBNQdGrwzvS8fwEHsg5L7L5NNpf65xj'
+
+  request_tokenURL = 'http://www.tumblr.com/oauth/request_token'
+
+  consumer = OAuth::Consumer.new(
+    oauth_consumer_key, secret_key, :site => 'https://www.tumblr.com/oauth/access_token')
+    access_token = consumer.get_access_token(nil, {}, { :x_auth_mode => 'client_auth', 
+                                                    :x_auth_username => "some@email.com", 
+                                                    :x_auth_password => "password"})
+    tumblr_credentials = access_token.get('http://www.tumblr.com/api/authenticate')
+ 
+  p "**********************************"
+  puts access_token
+  puts access_token.token
+  puts access_token.secret        
+  puts tumblr_credentials.body
+  p "**********************************"
+
+  Tumblr.configure do |config|
+    config.consumer_key = oauth_consumer_key
+    config.consumer_secret = secret_key
+    config.oauth_token = access_token.token
+    config.oauth_token_secret = access_token.secret
+  end
 end
 
 
