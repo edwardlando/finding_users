@@ -3,15 +3,15 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
 
-
-
   def index
     
   #  configure
     arr = ["thefancy","wanelo"]
     @users = search_terms(arr).sort {|a,b| b.influence<=>a.influence}
 
-    @profile = linkedin_search
+    #@klout = klout_search
+
+    #@profile = linkedin_search
 
     respond_to do |format|
       format.html # index.html.erb
@@ -120,7 +120,7 @@ def twitter_search(terms)
     callback = Twitter.search(t,:count => 100, :lang => "en")
     users = callback.results.map {|res| res.user} 
     users.each do |user|
-      puts user.name
+      #puts user.name
       if (user_list.has_key?(user.name))
         user_list[user.name].influence+=user.followers_count
       else
@@ -148,10 +148,9 @@ def linkedin_search
 
   rtoken = client.request_token.token
   rsecret = client.request_token.secret
-  
-  client.request_token.authorize_url
-  p "**********************************"
-  p client.request_token.authorize_url
+
+  #p "**********************************"
+  #p client.request_token.authorize_url
 
   pin = '84526'
 
@@ -160,6 +159,23 @@ def linkedin_search
   p client
 
   client.profile
+end
+
+def klout_search
+  require 'klout'
+  @api_key = 'xm2cvu3cnakgsdy827skq7he'
+
+  Klout.api_key = ENV[@api_key]
+  klout_id = Klout::Identity.find_by_screen_name('jasontorres')
+
+
+  #user = Klout::User.new(klout_id)
+
+  #topics = user.topics
+
+  p "**********************************"
+  p klout_id
+
 end
 
 
