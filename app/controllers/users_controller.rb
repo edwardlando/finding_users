@@ -6,8 +6,9 @@ class UsersController < ApplicationController
   def index
     
   #  configure
-    arr = ["thefancy","wanelo"]
+    arr = ["wanelo","thefancy"]
     @users = search_terms(arr).sort {|a,b| b.influence<=>a.influence}
+
 
     #@klout = klout_search
 
@@ -118,9 +119,10 @@ def twitter_search(terms)
   end
   terms.each do |t|
     callback = Twitter.search(t,:count => 100, :lang => "en")
+
     users = callback.results.map {|res| res.user} 
-    users.each do |user|
-      #puts user.name
+    users.each.with_index do |user,ind|
+      puts user.name
       if (user_list.has_key?(user.name))
         user_list[user.name].influence+=user.followers_count
       else
@@ -129,8 +131,8 @@ def twitter_search(terms)
         u.description = user.description
         u.image = user.profile_background_image_url
         u.influence = user.followers_count
-        u.contact = user.url
-        user_list[u.name]=u
+        u.contact = callback.results[ind].from_user
+        user_list[u.name]= u
       end
     end
   end
@@ -138,6 +140,14 @@ def twitter_search(terms)
   user_list.values
 end
 
+
+  def fb_search(terms)
+    @graph = Koala::Facebook::API.new
+    terms.each do |t|
+      puts @graph.search(t)
+    end
+  end
+  
 def linkedin_search
   @api_key = '9u62uu7fluz1'
   @secret_key = 'QnhL3SzveFxUt4R9'
@@ -161,6 +171,7 @@ def linkedin_search
   client.profile
 end
 
+
 def klout_search
   require 'klout'
   @api_key = 'xm2cvu3cnakgsdy827skq7he'
@@ -179,8 +190,12 @@ def klout_search
 end
 
 
+
+
 def search_terms(terms)
+    fb_search(terms)
   twitter_search(terms)
+
 end
 
 
