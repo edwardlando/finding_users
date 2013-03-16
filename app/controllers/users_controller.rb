@@ -13,7 +13,7 @@ class UsersController < ApplicationController
 
     @klout = klout_search
 
-    #@profile = linkedin_search
+    @linked_in = linkedin_search
 
     respond_to do |format|
       format.html # index.html.erb
@@ -162,10 +162,10 @@ def linkedin_search
   rtoken = client.request_token.token
   rsecret = client.request_token.secret
 
-  #p "**********************************"
-  #p client.request_token.authorize_url
+  p "**********************************"
+  p client.request_token.authorize_url
 
-  pin = '84526'
+  pin = '18360'
 
   client.authorize_from_request(rtoken, rsecret, pin)
 
