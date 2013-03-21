@@ -12,11 +12,11 @@ class UsersController < ApplicationController
   #  @facebook = fb_search(arr)
 
 
-    #@klout = klout_search
+    @klout = klout_search
 
     #@linked_in = linkedin_search
 
-    tumblr_search
+    #tumblr_search
 
     @users = search_terms(arr)
 
@@ -207,16 +207,19 @@ end
 
 
 def klout_search
-  require 'klout'
-  Klout.api_key = ENV['qyj6z8v63bx29wp4nmf4ej56']
+ # require 'klout'
+ # Klout.api_key = ENV['klout_api_key']
 
-  klout_id = Klout::Identity.find_by_screen_name('edwardlando')
-  user = Klout::Identity.new(klout_id)
-  user.details
-  user.score
-  user.score.scoreDelta.dayChange
-  user.topics
-  user.influence
+  api_key='qyj6z8v63bx29wp4nmf4ej56'
+  conn = Faraday.new(:url => "http://api.klout.com/v2/identity.json")
+  response = conn.get "/twitter?key="+api_key+"&screenName=edwardlando"
+  p "******************************************************************************"
+  puts response.body
+
+#  klout_id = Klout::Identity.find_by_screen_name('edwardlando')
+#  puts klout_id['id']
+#  user = Klout::User.new(klout_id['id'])
+#  puts user
 end
 
 def tumblr_search
